@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -47,6 +46,10 @@ public class Screen extends JPanel implements Runnable {
 
 	private int ticks = 0;
 	private Key key;
+	
+	
+	
+	
 
 	public void Message(String title, String msg) {
 		JOptionPane.showMessageDialog(null, msg, title,
