@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
+@SuppressWarnings("serial")
 public class GameWindow extends JFrame{
 
 	public GameWindow() {

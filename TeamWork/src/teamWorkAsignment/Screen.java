@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,8 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class Screen extends JPanel implements Runnable {
 
+	@SuppressWarnings("unused")
 	private static final long serialversionUID = 1L;
 	public static final int WIDTH = 600, HEIGHT = 600;
 
@@ -37,7 +40,7 @@ public class Screen extends JPanel implements Runnable {
 	private int x = 10, y = 10;
 	private int x2 = 30, y2 = 30;
 	private int size = 5;
-	private int size2 =5;
+	private int size2 = 5;
 
 	private boolean right = true, left = false, up = false, down = false;
 	private boolean right2 = false, left2 = true, up2 = false, down2 = false;
@@ -71,7 +74,7 @@ public class Screen extends JPanel implements Runnable {
 			snake.add(b);
 		}
 
-		if ((snake2.size() == 0) && isSnake2Alive){
+		if ((snake2.size() == 0) && isSnake2Alive) {
 			b2 = new SnakeBody(x2, y2, 12);
 			snake2.add(b2);
 		}
@@ -89,17 +92,22 @@ public class Screen extends JPanel implements Runnable {
 				apples.remove(i);
 				i--;
 			}
+
+		}
+
+		for (int i = 0; i < apples.size(); i++) {
 			if (x2 == apples.get(i).getX() && y2 == apples.get(i).getY()) {
 				size2++;
 				apples.remove(i);
 				i--;
 			}
 		}
-		if(isSnake1Alive){
+
+		if (isSnake1Alive) {
 			for (int i = 0; i < snake.size(); i++) {
 				if (x == snake.get(i).getX() && y == snake.get(i).getY()) {
 					if (i != snake.size() - 1) {
-						stop();
+						isSnake1Alive = snakeDie(snake, isSnake1Alive, "1");
 					}
 				}
 			}
@@ -108,27 +116,21 @@ public class Screen extends JPanel implements Runnable {
 			for (int i = 0; i < snake2.size(); i++) {
 				if (x2 == snake2.get(i).getX() && y2 == snake2.get(i).getY()) {
 					if (i != snake2.size() - 1) {
-						stop();
+						isSnake2Alive = snakeDie(snake2, isSnake2Alive, "2");
 					}
 				}
 			}
 		}
-		if(x < 0 || x > 49 || y < 0 || y > 49){
-			snake.clear();
-			if(isSnake1Alive)
-				Message("Game Over","Snake 1 Died!");
-			isSnake1Alive=false;
+		if (x < 0 || x > 49 || y < 0 || y > 49) {
+			isSnake1Alive = snakeDie(snake, isSnake1Alive, "1");
 		}
-			if(x2 < 0 || x2 > 49 || y2 < 0 || y2 > 49){
-			snake2.clear();
-			if(isSnake2Alive)
-				Message("Game Over","Snake 2 Died!");
-			isSnake2Alive=false;
+		if (x2 < 0 || x2 > 49 || y2 < 0 || y2 > 49) {
+			isSnake2Alive = snakeDie(snake2, isSnake2Alive, "2");
 		}
-		if (!isSnake1Alive && !isSnake2Alive){
-				Message("Game Over","Succers!");
-				stop();
-			
+		if (!isSnake1Alive && !isSnake2Alive) {
+			Message("Game Over", "Succers!");
+			stop();
+
 		}
 
 		ticks++;
@@ -136,19 +138,19 @@ public class Screen extends JPanel implements Runnable {
 		if (ticks > 1500000) {
 			if (right)
 				x++;
-			if(right2)
+			if (right2)
 				x2++;
 			if (left)
 				x--;
-			if(left2)
+			if (left2)
 				x2--;
 			if (up)
 				y--;
-			if(up2)
+			if (up2)
 				y2--;
 			if (down)
 				y++;
-			if(down2)
+			if (down2)
 				y2++;
 
 			ticks = 0;
@@ -169,6 +171,15 @@ public class Screen extends JPanel implements Runnable {
 				snake2.remove(0);
 			}
 		}
+	}
+
+	private boolean snakeDie(ArrayList<SnakeBody> snake, boolean isAlive,
+			String number) {
+		snake.clear();
+		if (isAlive)
+			Message("Game Over", "Snake " + number + "  Died!");
+		isAlive = false;
+		return isAlive;
 	}
 
 	public void paint(Graphics g) {
@@ -231,7 +242,7 @@ public class Screen extends JPanel implements Runnable {
 				left = false;
 				down = true;
 			}
-			
+
 			if (key == KeyEvent.VK_D && !left2) {
 				right2 = true;
 				up2 = false;
